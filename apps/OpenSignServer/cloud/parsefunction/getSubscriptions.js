@@ -103,8 +103,8 @@ export default async function getSubscription(request) {
         if (!TenantId) {
           const extUserCls = new Parse.Query('contracts_Users');
           extUserCls.equalTo('Email', _contractUser.CreatedBy.email);
-          const contactUser = await extUserCls.first({ useMasterKey: true });
-          TenantId = contactUser?.get('TenantId')?.id || '';
+          const extUserRes = await extUserCls.first({ useMasterKey: true });
+          TenantId = extUserRes?.get('TenantId')?.id || '';
         }
         const subscriptionCls = new Parse.Query('contracts_Subscriptions');
         subscriptionCls.equalTo('TenantId', {
