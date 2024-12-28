@@ -13,7 +13,7 @@ services:
       - NODE_ENV=production
       - SERVER_URL=${HOST_URL:-https://localhost:3001}/app
     networks:
-      - app-network
+      - my_network
   mongo:
     image: mongo:latest
     container_name: mongo-container
@@ -22,7 +22,7 @@ services:
     ports:
       - "27018:27017"
     networks:
-      - app-network
+      - my_network
   client:
     # image: opensign/opensign:main
     container_name: OpenSign-container
@@ -39,7 +39,7 @@ services:
     ports:
       - "3000:3000"
     networks:
-      - app-network
+      - my_network
   caddy:
     image: caddy:latest
     container_name: caddy-container
@@ -53,13 +53,13 @@ services:
       - caddy_data:/data
       - caddy_config:/config
     networks:
-      - app-network
+      - my_network
     environment:
       - HOST_URL=${HOST_URL:-localhost:3001}
 networks:
-  app-network:
-    driver: bridge
-
+    my_network:
+        name: my_network
+        driver: bridge
 volumes:
   data-volume:
   web-root:
