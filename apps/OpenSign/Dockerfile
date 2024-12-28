@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY ./apps/OpenSign/package*.json ./
 
 # Install application dependencies
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Copy the rest of the application files
 COPY ./apps/OpenSign/ ./
@@ -18,7 +18,9 @@ COPY ./apps/OpenSign/.husky/ .husky/
 EXPOSE 3000
 
 # Debug The application--for dev
-ENTRYPOINT npm run start-dev
+# ENTRYPOINT npm run start-dev
+CMD ["npm", "run", "start-dev"]
 
 # Run the application
 # ENTRYPOINT npm run start
+
