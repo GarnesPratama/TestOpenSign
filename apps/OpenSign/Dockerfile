@@ -5,21 +5,17 @@ FROM node:18
 WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json first to leverage Docker cache
-COPY ./package*.json ./
+COPY ./apps/OpenSign/package*.json ./
 
 # Install application dependencies
 RUN npm install
 
-# Copy the current directory contents into the container
-COPY ./ .
-COPY ./.husky .
+# Copy the rest of the application files
+COPY ./apps/OpenSign/ ./
+COPY ./apps/OpenSign/.husky/ .husky/
 
-# Make port 3000 available to the world outside this container
+# Expose port 3000
 EXPOSE 3000
 
-# Define environment variables if needed
-# ENV NODE_ENV production
-
 # Run the application
-ENTRYPOINT npm run start
-
+ENTRYPOINT npm run start-dev
