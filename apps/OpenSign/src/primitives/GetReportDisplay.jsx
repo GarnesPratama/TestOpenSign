@@ -106,6 +106,8 @@ const ReportTable = (props) => {
       const firstPageIndex = 1;
       const lastPageIndex = totalPages;
 
+
+
       if (!showLeftDots && showRightDots) {
         let leftItemCount = 3;
         let leftRange = Array.from({ length: leftItemCount }, (_, i) => i + 1);
@@ -193,6 +195,8 @@ const ReportTable = (props) => {
       return "-";
     }
   };
+
+
   // below useEffect is used to render next record if IsMoreDoc is true
   // second last value of pageNumber array is same as currentPage
   useEffect(() => {
@@ -227,6 +231,8 @@ const ReportTable = (props) => {
       alert(t("user-not-exist"));
     }
   };
+
+
 
   // `handleURL` is used to open microapp
   const handleURL = async (item, act) => {
@@ -444,6 +450,8 @@ const ReportTable = (props) => {
   const indexOfFirstDoc = indexOfLastDoc - props.docPerPage;
   const currentList = props.List?.slice(indexOfFirstDoc, indexOfLastDoc);
 
+
+
   // Change page
   const paginateFront = () => {
     const lastValue = pageNumbers?.[pageNumbers?.length - 1];
@@ -573,8 +581,7 @@ const ReportTable = (props) => {
     };
     await axios
       .put(
-        `${localStorage.getItem("baseUrl")}classes/contracts_Document/${
-          item.objectId
+        `${localStorage.getItem("baseUrl")}classes/contracts_Document/${item.objectId
         }`,
         data,
         {
@@ -801,8 +808,8 @@ const ReportTable = (props) => {
     const encodeBase64 = user.email
       ? btoa(`${doc.objectId}/${user.email}`)
       : btoa(
-          `${doc.objectId}/${user.signerPtr.Email}/${user.signerPtr.objectId}`
-        );
+        `${doc.objectId}/${user.signerPtr.Email}/${user.signerPtr.objectId}`
+      );
     const expireDate = doc.ExpiryDate.iso;
     const newDate = new Date(expireDate);
     const localExpireDate = newDate.toLocaleDateString("en-US", {
@@ -1301,13 +1308,12 @@ const ReportTable = (props) => {
       >
         <button
           onClick={() => setIsModal({ [`${item.objectId}_${i}`]: true })}
-          className={`${
-            x.Activity === "SIGNED"
-              ? "op-border-primary op-text-primary"
-              : x.Activity === "VIEWED"
-                ? "border-green-400 text-green-400"
-                : "border-black text-black"
-          } focus:outline-none border-2 w-[60px] h-[30px] text-[11px] rounded-full`}
+          className={`${x.Activity === "SIGNED"
+            ? "op-border-primary op-text-primary"
+            : x.Activity === "VIEWED"
+              ? "border-green-400 text-green-400"
+              : "border-black text-black"
+            } focus:outline-none border-2 w-[60px] h-[30px] text-[11px] rounded-full`}
         >
           {x?.Activity?.toUpperCase() || "-"}
         </button>
@@ -1328,6 +1334,17 @@ const ReportTable = (props) => {
       </div>
     ));
   };
+
+  const [selectedFolder, setSelectedFolder] = useState('');
+
+  // Extract unique folder names
+  const folderNames = Array.from(new Set(currentList.map(item => item.Folder.Name)));
+
+  // Filter the results based on the selected folder
+  const filteredResults = selectedFolder
+    ? currentList.filter(item => item.Folder.Name === selectedFolder)
+    : currentList;
+
   return (
     <div className="relative">
       {Object.keys(actLoader)?.length > 0 && (
@@ -1396,15 +1413,14 @@ const ReportTable = (props) => {
           )}
         </div>
         <div
-          className={`overflow-auto w-full border-b ${
-            props.List?.length > 0
-              ? isDashboard
-                ? "min-h-[317px]"
-                : currentList?.length === props.docPerPage
-                  ? "h-fit"
-                  : "h-screen"
-              : ""
-          }`}
+          className={`overflow-auto w-full border-b ${props.List?.length > 0
+            ? isDashboard
+              ? "min-h-[317px]"
+              : currentList?.length === props.docPerPage
+                ? "h-fit"
+                : "h-screen"
+            : ""
+            }`}
         >
           <table className="op-table border-collapse w-full mb-4">
             <thead className="text-[14px] text-center">
@@ -1427,7 +1443,8 @@ const ReportTable = (props) => {
             <tbody className="text-[12px]">
               {props.List?.length > 0 && (
                 <>
-                  {currentList.map((item, index) =>
+                  {console.log("cek current", currentList)}
+                  {(selectedFolder === "" ? currentList : filteredResults).map((item, index) =>
                     props.ReportName === "Contactbook" ? (
                       <tr className="border-y-[1px]" key={index}>
                         {props.heading.includes("Sr.No") && (
@@ -1450,9 +1467,8 @@ const ReportTable = (props) => {
                                   key={index}
                                   onClick={() => handleActionBtn(act, item)}
                                   title={t(`btnLabel.${act.hoverLabel}`)}
-                                  className={`${
-                                    act?.btnColor ? act.btnColor : ""
-                                  } op-btn op-btn-sm`}
+                                  className={`${act?.btnColor ? act.btnColor : ""
+                                    } op-btn op-btn-sm`}
                                 >
                                   <i className={act.btnIcon}></i>
                                 </button>
@@ -1490,11 +1506,10 @@ const ReportTable = (props) => {
                       </tr>
                     ) : (
                       <tr
-                        className={`${
-                          currentList?.length === props.docPerPage
-                            ? "last:border-none"
-                            : ""
-                        } border-y-[1px] `}
+                        className={`${currentList?.length === props.docPerPage
+                          ? "last:border-none"
+                          : ""
+                          } border-y-[1px] `}
                         key={index}
                       >
                         {props.heading.includes("Sr.No") && (
@@ -1525,10 +1540,28 @@ const ReportTable = (props) => {
                           </td>
                         )}
                         {props.heading.includes("Folder") && (
-                          <td className="p-2 text-center">
-                            {item?.Folder?.Name ||
-                              t("sidebar.OpenSign™ Drive")}
-                          </td>
+                          <>
+                            <div>
+                              <select onChange={e => setSelectedFolder(e.target.value)} value={selectedFolder}>
+                                <option value="">Select Folder</option>
+                                {folderNames.map((folder, index) => (
+                                  <option key={index} value={folder}>
+                                    {folder}
+                                  </option>
+                                ))}
+                              </select>
+
+                              <div>
+                                <h2>Filtered Results</h2>
+
+                              </div>
+                            </div>
+                            {/* <td className="p-2 text-center">
+                              {item?.Folder?.Name ||
+                                t("sidebar.OpenSign™ Drive")}
+                            </td> */}
+                          </>
+
                         )}
                         <td className="p-2 text-center">
                           <button
@@ -1545,9 +1578,9 @@ const ReportTable = (props) => {
                           </td>
                         )}
                         {props.heading.includes("Signers") &&
-                        ["In-progress documents", "Need your sign"].includes(
-                          props.ReportName
-                        ) ? (
+                          ["In-progress documents", "Need your sign"].includes(
+                            props.ReportName
+                          ) ? (
                           <td className="px-1 py-2">
                             {!item?.IsSignyourself && item?.Placeholders && (
                               <>{formatStatusRow(item)}</>
@@ -1736,69 +1769,68 @@ const ReportTable = (props) => {
                                     {(item.ExtUserPtr?.objectId ===
                                       extClass?.[0]?.objectId ||
                                       act.btnLabel === "Use") && (
-                                      <div
-                                        role="button"
-                                        data-tut={act?.selector}
-                                        key={index}
-                                        onClick={() =>
-                                          handleActionBtn(act, item)
-                                        }
-                                        title={t(`btnLabel.${act.hoverLabel}`)}
-                                        className={
-                                          act.action !== "option"
-                                            ? `${
-                                                act?.btnColor || ""
+                                        <div
+                                          role="button"
+                                          data-tut={act?.selector}
+                                          key={index}
+                                          onClick={() =>
+                                            handleActionBtn(act, item)
+                                          }
+                                          title={t(`btnLabel.${act.hoverLabel}`)}
+                                          className={
+                                            act.action !== "option"
+                                              ? `${act?.btnColor || ""
                                               } op-btn op-btn-sm mr-1`
-                                            : "text-base-content focus:outline-none text-lg mr-2 relative"
-                                        }
-                                      >
-                                        <i className={act.btnIcon}></i>
-                                        {act.btnLabel && (
-                                          <span className="uppercase font-medium">
-                                            {act.btnLabel.includes(
-                                              "Quick send"
-                                            ) && isEnableSubscription
-                                              ? "Bulk Send"
-                                              : `${t(
+                                              : "text-base-content focus:outline-none text-lg mr-2 relative"
+                                          }
+                                        >
+                                          <i className={act.btnIcon}></i>
+                                          {act.btnLabel && (
+                                            <span className="uppercase font-medium">
+                                              {act.btnLabel.includes(
+                                                "Quick send"
+                                              ) && isEnableSubscription
+                                                ? "Bulk Send"
+                                                : `${t(
                                                   `btnLabel.${act.btnLabel}`
                                                 )}`}
-                                          </span>
-                                        )}
-                                        {/* template report */}
-                                        {isOption[item.objectId] &&
-                                          act.action === "option" && (
-                                            <ul className="absolute -right-1 top-auto z-[70] w-max op-dropdown-content op-menu shadow-black/20 shadow bg-base-100 text-base-content rounded-box">
-                                              {act.subaction?.map((subact) => (
-                                                <li
-                                                  key={subact.btnId}
-                                                  onClick={() =>
-                                                    handleActionBtn(
-                                                      subact,
-                                                      item
-                                                    )
-                                                  }
-                                                  title={t(
-                                                    `btnLabel.${subact.btnLabel}`
-                                                  )}
-                                                >
-                                                  <span>
-                                                    <i
-                                                      className={`${subact.btnIcon} mr-1.5`}
-                                                    ></i>
-                                                    {subact.btnLabel && (
-                                                      <span className="text-[13px] capitalize font-medium">
-                                                        {t(
-                                                          `btnLabel.${subact.btnLabel}`
-                                                        )}
-                                                      </span>
-                                                    )}
-                                                  </span>
-                                                </li>
-                                              ))}
-                                            </ul>
+                                            </span>
                                           )}
-                                      </div>
-                                    )}
+                                          {/* template report */}
+                                          {isOption[item.objectId] &&
+                                            act.action === "option" && (
+                                              <ul className="absolute -right-1 top-auto z-[70] w-max op-dropdown-content op-menu shadow-black/20 shadow bg-base-100 text-base-content rounded-box">
+                                                {act.subaction?.map((subact) => (
+                                                  <li
+                                                    key={subact.btnId}
+                                                    onClick={() =>
+                                                      handleActionBtn(
+                                                        subact,
+                                                        item
+                                                      )
+                                                    }
+                                                    title={t(
+                                                      `btnLabel.${subact.btnLabel}`
+                                                    )}
+                                                  >
+                                                    <span>
+                                                      <i
+                                                        className={`${subact.btnIcon} mr-1.5`}
+                                                      ></i>
+                                                      {subact.btnLabel && (
+                                                        <span className="text-[13px] capitalize font-medium">
+                                                          {t(
+                                                            `btnLabel.${subact.btnLabel}`
+                                                          )}
+                                                        </span>
+                                                      )}
+                                                    </span>
+                                                  </li>
+                                                ))}
+                                              </ul>
+                                            )}
+                                        </div>
+                                      )}
                                   </React.Fragment>
                                 ) : (
                                   <div
@@ -1809,9 +1841,8 @@ const ReportTable = (props) => {
                                     title={t(`btnLabel.${act.hoverLabel}`)}
                                     className={
                                       act.action !== "option"
-                                        ? `${
-                                            act?.btnColor ? act.btnColor : ""
-                                          } op-btn op-btn-sm mr-1`
+                                        ? `${act?.btnColor ? act.btnColor : ""
+                                        } op-btn op-btn-sm mr-1`
                                         : "text-base-content focus:outline-none text-lg mr-2 relative"
                                     }
                                   >
@@ -2292,11 +2323,10 @@ const ReportTable = (props) => {
                                       <div className="flex justify-between items-center gap-2 my-2 px-3">
                                         <div className="text-black">
                                           {user?.signerPtr?.Name || "-"}{" "}
-                                          {`<${
-                                            user?.email
-                                              ? user.email
-                                              : user.signerPtr.Email
-                                          }>`}
+                                          {`<${user?.email
+                                            ? user.email
+                                            : user.signerPtr.Email
+                                            }>`}
                                         </div>
                                         <>{fetchUserStatus(user, item)}</>
                                       </div>
@@ -2320,13 +2350,15 @@ const ReportTable = (props) => {
                   )}
                 </>
               )}
+              {/* {filteredResults.map((item, index) => (
+                                  
+                    ))} */}
             </tbody>
           </table>
           {props.List?.length <= 0 && (
             <div
-              className={`${
-                isDashboard ? "h-[317px]" : ""
-              } flex flex-col items-center justify-center w-ful bg-base-100 text-base-content rounded-xl py-4`}
+              className={`${isDashboard ? "h-[317px]" : ""
+                } flex flex-col items-center justify-center w-ful bg-base-100 text-base-content rounded-xl py-4`}
             >
               <div className="w-[60px] h-[60px] overflow-hidden">
                 <img
@@ -2355,9 +2387,8 @@ const ReportTable = (props) => {
               key={i}
               onClick={() => setCurrentPage(x)}
               disabled={x === "..."}
-              className={`${
-                x === currentPage ? "op-btn-active" : ""
-              } op-join-item op-btn op-btn-sm`}
+              className={`${x === currentPage ? "op-btn-active" : ""
+                } op-join-item op-btn op-btn-sm`}
             >
               {x}
             </button>
