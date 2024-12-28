@@ -17,8 +17,8 @@ COPY ./apps/OpenSign/.husky/ .husky/
 # Expose port 3000
 EXPOSE 3000
 
-# # Debug The application--for dev
-# ENTRYPOINT npm run start-dev
+# Debug The application--for dev
+ENTRYPOINT npm run start-dev
 
 # Run the application
-ENTRYPOINT npm run start
+# ENTRYPOINT npm run start
