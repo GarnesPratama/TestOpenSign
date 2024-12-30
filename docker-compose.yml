@@ -5,9 +5,9 @@ services:
     volumes:
       - opensign-files:/usr/src/app/files
     ports:
-      - "8081:8081"
-    depends_on:
-      - mongo
+      - "8080:8080"
+    # depends_on:
+    #   - mongo
     env_file: .env.prod
     environment:
       - NODE_ENV=production
@@ -57,9 +57,9 @@ services:
     environment:
       - HOST_URL=${HOST_URL:-localhost:3001}
 networks:
-    my_network:
-        name: my_network
-        driver: bridge
+  my_network:
+    name: my_network
+    driver: bridge
 volumes:
   data-volume:
   web-root:

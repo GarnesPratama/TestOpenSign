@@ -7,7 +7,7 @@ const SocialMedia = () => {
 
   return (
     <React.Fragment>
-      <NavLink
+      {/* <NavLink
         to="https://github.com/opensignlabs/opensign"
         target="_blank"
         rel="noopener noreferrer"
@@ -46,7 +46,7 @@ const SocialMedia = () => {
         <span className="fa-sr-only">
           OpenSign&apos;s {t("social-media.discord")}
         </span>
-      </NavLink>
+      </NavLink> */}
     </React.Fragment>
   );
 };

@@ -1338,11 +1338,11 @@ const ReportTable = (props) => {
   const [selectedFolder, setSelectedFolder] = useState('');
 
   // Extract unique folder names
-  const folderNames = Array.from(new Set(currentList.map(item => item.Folder.Name)));
+  const folderNames = Array.from(new Set(currentList.map(item => item?.Folder?.Name)));
 
   // Filter the results based on the selected folder
   const filteredResults = selectedFolder
-    ? currentList.filter(item => item.Folder.Name === selectedFolder)
+    ? currentList.filter(item => item?.Folder?.Name === selectedFolder)
     : currentList;
 
   return (
@@ -1387,7 +1387,7 @@ const ReportTable = (props) => {
             )}
           </>
         )}
-        <div className="flex flex-row items-center justify-between my-2 mx-3 text-[20px] md:text-[23px]">
+        <div className="flex justify-between">        <div className="flex flex-row items-center justify-between my-2 mx-3 text-[20px] md:text-[23px]">
           <div className="font-light">
             {t(`report-name.${props.ReportName}`)}
             {props.report_help && (
@@ -1412,6 +1412,22 @@ const ReportTable = (props) => {
             </div>
           )}
         </div>
+          <div class="relative">
+            <div class="flex items-center bg-white border border-gray-300 rounded-md shadow-sm hover:shadow  mb-3 mt-2">
+              <input
+                type="text"
+                class="w-full px-4 py-2 text-sm text-gray-900 placeholder-gray-400 bg-transparent border-none focus:outline-none"
+                placeholder="Search..."
+                aria-label="Search" />
+              <button
+                type="button"
+                class="px-4 py-2 text-sm font-medium text-white op-btn-primary op-btn op-btn-md rounded-r-md ">
+                Search
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div
           className={`overflow-auto w-full border-b ${props.List?.length > 0
             ? isDashboard
@@ -1426,8 +1442,31 @@ const ReportTable = (props) => {
             <thead className="text-[14px] text-center">
               <tr className="border-y-[1px]">
                 {props.heading?.map((item, index) => (
+
                   <React.Fragment key={index}>
-                    <th className="p-2">{t(`report-heading.${item}`)}</th>
+                    {item === "Folder" ?
+                      <th className="p-2 ">
+                        <div class="relative inline-block text-left">
+                          <div>
+                            <select
+                              class="block w-full rounded-md bg-white border border-gray-300 px-2 py-2 text-sm font-medium text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 focus:outline-none hover:bg-gray-100"
+                              id="combo-box"
+                              aria-expanded="true"
+                              aria-haspopup="true"
+                              onChange={e => setSelectedFolder(e.target.value)}
+                              value={selectedFolder}>
+                              <option value={""} disabled selected>Folder</option>
+                              {folderNames?.map((folder, index) => (
+                                <option key={index} value={folder} class="text-gray-700">
+                                  {folder}
+                                </option>
+                              ))}
+                              <option value={""} selected>Reset Filter Folder</option>
+                            </select>
+                          </div>
+                        </div>
+                      </th>
+                      : <th className="p-2">{t(`report-heading.${item}`)}</th>}
                   </React.Fragment>
                 ))}
                 {props.ReportName === "Templates" && isEnableSubscription && (
@@ -1541,25 +1580,10 @@ const ReportTable = (props) => {
                         )}
                         {props.heading.includes("Folder") && (
                           <>
-                            <div>
-                              <select onChange={e => setSelectedFolder(e.target.value)} value={selectedFolder}>
-                                <option value="">Select Folder</option>
-                                {folderNames.map((folder, index) => (
-                                  <option key={index} value={folder}>
-                                    {folder}
-                                  </option>
-                                ))}
-                              </select>
-
-                              <div>
-                                <h2>Filtered Results</h2>
-
-                              </div>
-                            </div>
-                            {/* <td className="p-2 text-center">
+                            <td className="p-2 text-center">
                               {item?.Folder?.Name ||
                                 t("sidebar.OpenSign™ Drive")}
-                            </td> */}
+                            </td>
                           </>
 
                         )}
@@ -2350,9 +2374,6 @@ const ReportTable = (props) => {
                   )}
                 </>
               )}
-              {/* {filteredResults.map((item, index) => (
-                                  
-                    ))} */}
             </tbody>
           </table>
           {props.List?.length <= 0 && (
