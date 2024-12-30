@@ -15,8 +15,10 @@ RUN npm install --legacy-peer-deps
 COPY ./apps/OpenSign/ ./
 COPY ./apps/OpenSign/.husky/ .husky/
 
+RUN npm run build
+
 # Expose port 3000
 EXPOSE 3000
 
 # Run the application
-ENTRYPOINT npm run start-dev
+ENTRYPOINT npm run start

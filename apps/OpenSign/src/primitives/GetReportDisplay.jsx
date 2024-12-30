@@ -1422,11 +1422,11 @@ const ReportTable = (props) => {
             </div>
           )}
         </div>
-          <div class="relative">
-            <div class="flex items-center bg-white border border-gray-300 rounded-md shadow-sm hover:shadow  mb-3 mt-2">
+          <div className="relative">
+            <div className="flex items-center bg-white border border-gray-300 rounded-md shadow-sm hover:shadow  mb-3 mt-2">
               <input
                 type="text"
-                class="w-full px-4 py-2 text-sm text-gray-900 placeholder-gray-400 bg-transparent border-none focus:outline-none"
+                className="w-full px-4 py-2 text-sm text-gray-900 placeholder-gray-400 bg-transparent border-none focus:outline-none"
                 placeholder="Search..."
                 aria-label="Search" onChange={e => setSearchTerm(e.target.value)} />
             </div>
@@ -1451,10 +1451,10 @@ const ReportTable = (props) => {
                   <React.Fragment key={index}>
                     {item === "Folder" ?
                       <th className="p-2 ">
-                        <div class="relative inline-block text-left">
+                        <div className="relative inline-block text-left">
                           <div>
                             <select
-                              class="block w-full rounded-md bg-white border border-gray-300 px-2 py-2 text-sm font-medium text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 focus:outline-none hover:bg-gray-100"
+                              className="block w-full rounded-md bg-white border border-gray-300 px-2 py-2 text-sm font-medium text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 focus:outline-none hover:bg-gray-100"
                               id="combo-box"
                               aria-expanded="true"
                               aria-haspopup="true"
@@ -1462,7 +1462,7 @@ const ReportTable = (props) => {
                               value={selectedFolder}>
                               <option value={""} disabled selected>Folder</option>
                               {folderNames?.map((folder, index) => (
-                                <option key={index} value={folder} class="text-gray-700">
+                                <option key={index} value={folder} className="text-gray-700">
                                   {folder}
                                 </option>
                               ))}
