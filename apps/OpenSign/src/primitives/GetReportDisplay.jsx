@@ -87,6 +87,8 @@ const ReportTable = (props) => {
   const extClass = Extand_Class && JSON.parse(Extand_Class);
   const startIndex = (currentPage - 1) * props.docPerPage;
   const { isMoreDocs, setIsNextRecord } = props;
+  const [searchTerm, setSearchTerm] = useState("");
+
 
   const getPaginationRange = () => {
     const totalPageNumbers = 7; // Adjust this value to show more/less page numbers
@@ -1340,10 +1342,18 @@ const ReportTable = (props) => {
   // Extract unique folder names
   const folderNames = Array.from(new Set(currentList.map(item => item?.Folder?.Name)));
 
-  // Filter the results based on the selected folder
-  const filteredResults = selectedFolder
-    ? currentList.filter(item => item?.Folder?.Name === selectedFolder)
-    : currentList;
+  const filteredResults = currentList.filter(item => {
+    const matchesFolder = selectedFolder ? item?.Folder?.Name === selectedFolder : true;
+    const matchesSearch = searchTerm.trim()
+      ? Object.values(item).some(value =>
+        value?.toString().toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      : true;
+
+    // console.log("cek matcher", matchesSearch)
+
+    return matchesFolder && matchesSearch;
+  });
 
   return (
     <div className="relative">
@@ -1418,12 +1428,7 @@ const ReportTable = (props) => {
                 type="text"
                 class="w-full px-4 py-2 text-sm text-gray-900 placeholder-gray-400 bg-transparent border-none focus:outline-none"
                 placeholder="Search..."
-                aria-label="Search" />
-              <button
-                type="button"
-                class="px-4 py-2 text-sm font-medium text-white op-btn-primary op-btn op-btn-md rounded-r-md ">
-                Search
-              </button>
+                aria-label="Search" onChange={e => setSearchTerm(e.target.value)} />
             </div>
           </div>
         </div>
@@ -1480,10 +1485,10 @@ const ReportTable = (props) => {
               </tr>
             </thead>
             <tbody className="text-[12px]">
+              {console.log("cek", currentList)}
               {props.List?.length > 0 && (
                 <>
-                  {console.log("cek current", currentList)}
-                  {(selectedFolder === "" ? currentList : filteredResults).map((item, index) =>
+                  {filteredResults.map((item, index) =>
                     props.ReportName === "Contactbook" ? (
                       <tr className="border-y-[1px]" key={index}>
                         {props.heading.includes("Sr.No") && (
