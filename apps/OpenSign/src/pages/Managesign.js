@@ -48,7 +48,8 @@ const ManageSign = () => {
         const signRes = await signQuery.first();
         if (signRes) {
           const res = signRes.toJSON();
-          setId(res.objectId);
+
+          setId(res?.objectId);
           if (res?.SignatureName) {
             const sanitizename = generateTitleFromFilename(res?.SignatureName);
             const replaceSpace = sanitizeFileName(sanitizename);
@@ -126,7 +127,9 @@ const ManageSign = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const isUrl = image?.includes("https") || image?.includes("http");
+
+    const isUrl = image?.includes("http");
+
     if (!isvalue) {
       setWarning(true);
       setTimeout(() => setWarning(false), 1000);
@@ -197,11 +200,11 @@ const ManageSign = () => {
     try {
       const parseFile = new Parse.File(file.name, file);
       const response = await parseFile.save();
-      if (response?.url()) {
-        const tenantId = localStorage.getItem("TenantId");
-        SaveFileSize(file.size, response.url(), tenantId);
-        return response?.url();
-      }
+      console.log("cek", response?.url);
+
+      const tenantId = localStorage.getItem("TenantId");
+      SaveFileSize(file.size, response.url(), tenantId);
+      return response?.url();
     } catch (err) {
       console.log("sign upload err", err);
       setIsLoader(false);
