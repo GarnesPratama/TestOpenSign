@@ -1343,7 +1343,12 @@ const ReportTable = (props) => {
   const folderNames = Array.from(new Set(currentList.map(item => item?.Folder?.Name)));
 
   const filteredResults = currentList.filter(item => {
-    const matchesFolder = selectedFolder ? item?.Folder?.Name === selectedFolder : true;
+    const matchesFolder = selectedFolder
+      ? selectedFolder === "OpenSign™ Drive"
+        ? !item?.Folder?.Name
+        : item?.Folder?.Name === selectedFolder
+      : true;
+
     const matchesSearch = searchTerm.trim()
       ? Object.values(item).some(value =>
         value?.toString().toLowerCase().includes(searchTerm.toLowerCase())
@@ -1462,9 +1467,10 @@ const ReportTable = (props) => {
                               value={selectedFolder}>
                               <option value={""} disabled selected>Folder</option>
                               {folderNames?.map((folder, index) => (
-                                <option key={index} value={folder} className="text-gray-700">
-                                  {folder}
+                                <option key={index} value={index == 0 && folder == undefined ? "OpenSign™ Drive" : folder} className="text-gray-700">
+                                  {index == 0 && folder == undefined ? "OpenSign™ Drive" : folder}
                                 </option>
+
                               ))}
                               <option value={""} selected>Reset Filter Folder</option>
                             </select>
@@ -1485,6 +1491,7 @@ const ReportTable = (props) => {
               </tr>
             </thead>
             <tbody className="text-[12px]">
+
               {console.log("cek", currentList)}
               {props.List?.length > 0 && (
                 <>
